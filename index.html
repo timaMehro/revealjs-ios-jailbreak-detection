@@ -58,12 +58,94 @@
                 making it challenging to protect against all threats. Developers must continually update and improve their jailbreak detection mechanisms to stay ahead of attackers and protect their applications and users.</p>
             </section>
 
-            <section data-transition="slide">
-              <h4>Conclusion</h4>
-              <p class="fragment highlight fade-in">Jailbreak detection is a critical security measure for protecting sensitive data and preventing unauthorized access to an application.
-                By detecting jailbroken devices, developers can mitigate the risks associated with jailbreaking and safeguard their applications and users.
-                While jailbreak detection is not foolproof, it is an essential component of a comprehensive security strategy and should be implemented in conjunction with other security measures to protect against threats.</p>
-            </section>
+            <section data-transition-speed="slow">
+              <h4>Checking for the Existence of Files and Directories:</h4>
+              <ul>
+                  <li>Jailbroken devices often have certain files or directories that standard devices do not have. For example:
+                      <ul>
+                          <li>/Applications/Cydia.app</li>
+                          <li>/Library/MobileSubstrate/MobileSubstrate.dylib</li>
+                          <li>/bin/bash</li>
+                          <li>/usr/sbin/sshd</li>
+                          <li>/etc/apt</li>
+                      </ul>
+                  </li>
+              </ul>
+          </section>
+
+          <section data-transition-speed="slow">
+              <h4>Checking for the Ability to Write Outside the Sandbox:</h4>
+              <ul>
+                  <li>Jailbroken devices allow applications to write outside their sandbox directory. You can try writing to a restricted directory, like the root directory.</li>
+              </ul>
+          </section>
+
+          <section data-transition-speed="slow">
+              <h4>Checking the Existence of Symbolic Links:</h4>
+              <ul>
+                  <li>Jailbroken devices may have symbolic links that do not exist on non-jailbroken devices. For example, checking if /Applications is a symbolic link.</li>
+              </ul>
+          </section>
+
+          <section data-transition-speed="slow">
+              <h4>Using the `dyld` Library:</h4>
+              <ul>
+                  <li>Checking for the presence of non-standard dynamic libraries that are commonly used in jailbroken environments.</li>
+              </ul>
+          </section>
+
+          <section data-transition-speed="slow">
+              <h4>Calling System Functions:</h4>
+              <ul>
+                  <li>Certain system functions can reveal if the device is jailbroken. For example, using the fork() function is restricted on non-jailbroken devices.</li>
+              </ul>
+          </section>
+
+          <section data-transition-speed="slow">
+            <h4>Sample Jailbreak Detection Code in Swift:</h4>
+            <pre><code class="swift">
+        import UIKit
+
+        class JailbreakDetection {
+            class func isJailbroken() -> Bool {
+                if isSimulator() { return false } // Skip checks for simulator
+
+                let jailbreakPaths = [
+                    "/Applications/Cydia.app",
+                    "/Library/MobileSubstrate/MobileSubstrate.dylib",
+                    "/bin/bash",
+                    "/usr/sbin/sshd",
+                    "/etc/apt"
+                ]
+
+                for path in jailbreakPaths {
+                    if FileManager.default.fileExists(atPath: path) {
+                        return true
+                    }
+                }
+
+                let testFile = "/private/jailbreaktest.txt"
+                do {
+                    try "Jailbreak Test".write(toFile: testFile, atomically: true, encoding: .utf8)
+                    try FileManager.default.removeItem(atPath: testFile)
+                    return true
+                } catch {
+                    return false
+                }
+            }
+
+            private class func isSimulator() -> Bool {
+                return TARGET_OS_SIMULATOR != 0
+            }
+        }
+            </code></pre>
+        </section>
+        <section data-transition-speed="slow">
+            <h4>Conclusion:</h4>
+            <p class="fragment highlight fade-in">Jailbreak detection is an essential security measure for protecting sensitive data and preventing unauthorized access to an application.
+                While jailbreak detection methods are not foolproof, they can help developers identify and block potential threats.
+                By implementing robust jailbreak detection mechanisms and staying up-to-date on the latest security trends, developers can enhance the security of their applications and protect their users from malicious attacks.</p>
+        </section>
         </div>
     </div>
 
